@@ -23,8 +23,19 @@ namespace Lockables {
 				lockable.Unlock();
 		}
 
+		public void ForceUnlock () {
+			if(counter == 0)
+				return;
+			counter = 0;
+			lockable.Unlock();
+		}
+
 		public bool IsLocked () {
 			return counter > 0;
+		}
+
+		public override string ToString () {
+			return string.Format ("[CountingLockable: counter={0}, lockable={1}]", counter, lockable);
 		}
 	}
 

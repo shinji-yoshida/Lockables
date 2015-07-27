@@ -28,6 +28,10 @@ namespace Lockables {
 			original.Unlock();
 		}
 
+		public void ForceUnlock () {
+			original.ForceUnlock();
+		}
+
 		public bool IsLocked () {
 			return original.IsLocked();
 		}
@@ -51,15 +55,27 @@ namespace Lockables {
 			}
 
 			public void Lock () {
+				if(locked)
+					throw new System.Exception("already locked");
+
 				locked = true;
 				foreach(var each in lockables)
 					each.Lock();
 			}
 
 			public void Unlock () {
+				if(! locked)
+					throw new System.Exception("already unlocked");
+
 				locked = false;
 				foreach(var each in lockables)
 					each.Unlock();
+			}
+
+			public void ForceUnlock () {
+				if(! locked)
+					return;
+				Unlock();
 			}
 
 			public bool IsLocked () {

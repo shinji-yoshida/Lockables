@@ -14,13 +14,25 @@ namespace Lockables {
 		}
 
 		public void Lock () {
+			if(locked)
+				throw new System.Exception("already locked");
+
 			locked = true;
 			onLocked();
 		}
 
 		public void Unlock () {
+			if(! locked)
+				throw new System.Exception("already unlocked");
+
 			locked = false;
 			onUnlocked();
+		}
+
+		public void ForceUnlock () {
+			if(! locked)
+				return;
+			Unlock();
 		}
 
 		public bool IsLocked () {

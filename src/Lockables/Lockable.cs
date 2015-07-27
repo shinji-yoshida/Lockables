@@ -9,6 +9,10 @@ namespace Lockables {
 			return new SimpleLockable(onLocked, onUnlocked);
 		}
 
+		public static CountingLockable CreateCounting(Action onLocked, Action onUnlocked) {
+			return new CountingLockable(Create(onLocked, onUnlocked));
+		}
+
 		public static ILockable Composite(params ILockable[] lockables) {
 			var result = new CompositeLockable();
 			foreach(var each in lockables)
@@ -22,7 +26,7 @@ namespace Lockables {
 			return singleLock;
 		}
 
-		public static IDisposable Lock(this ILockable lockable) {
+		public static IDisposable DisposableLock(this ILockable lockable) {
 			return new Lock(lockable);
 		}
 	}
