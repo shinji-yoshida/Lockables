@@ -9,7 +9,10 @@ namespace Lockables {
 		public CountingLockable (ILockable lockable) {
 			this.lockable = lockable;
 		}
-		
+
+		public int Count {
+			get { return counter; }
+		}
 
 		public void Lock () {
 			if(counter == 0)
