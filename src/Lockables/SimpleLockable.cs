@@ -1,42 +1,43 @@
 ﻿using System.Collections;
 using System;
+using UniRx;
 
 namespace Lockables {
 
-	public class SimpleLockable : ILockable {
-		bool locked = false;
+	public class SimpleLockable : AbstractLockable {
 		Action onLocked;
 		Action onUnlocked;
 
-		public SimpleLockable (Action onLocked, Action onUnlocked) {
+		public SimpleLockable (Action onLocked, Action onUnlocked) : base() {
 			this.onLocked = onLocked;
 			this.onUnlocked = onUnlocked;
 		}
 
-		public void Lock () {
+		public override void Lock () {
 			if(locked)
 				throw new System.Exception("already locked");
 
-			locked = true;
-			onLocked();
+			DoLock ();
+		}
+		protected override void OnLocked () {
+			onLocked ();
 		}
 
-		public void Unlock () {
+		protected override void OnUnlocked () {
+			onUnlocked ();
+		}
+
+		public override void Unlock () {
 			if(! locked)
 				throw new System.Exception("already unlocked");
 
-			locked = false;
-			onUnlocked();
+			DoUnlock ();
 		}
 
-		public void ForceUnlock () {
+		public override void ForceUnlock () {
 			if(! locked)
 				return;
 			Unlock();
-		}
-
-		public bool IsLocked () {
-			return locked;
 		}
 	}
 

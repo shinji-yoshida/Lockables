@@ -13,7 +13,7 @@ namespace Lockables {
 			return new CountingLockable(Create(onLocked, onUnlocked));
 		}
 
-		public static ILockable Composite(params ILockable[] lockables) {
+		public static CompositeLockable Composite(params ILockable[] lockables) {
 			var result = new CompositeLockable();
 			foreach(var each in lockables)
 				result.Add(each);

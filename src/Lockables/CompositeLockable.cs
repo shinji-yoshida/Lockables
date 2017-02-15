@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 
 namespace Lockables {
 
@@ -36,9 +37,14 @@ namespace Lockables {
 			return original.IsLocked();
 		}
 
+		public IObservable<bool> OnLockUpdatedAsObservable () {
+			return original.OnLockUpdatedAsObservable ();
+		}
+
 		class Composite : ILockable {
 			List<ILockable> lockables = new List<ILockable>();
 			bool locked = false;
+			Subject<bool> lockUpdatedSubject = new Subject<bool>();
 
 			public void Add(ILockable lockable) {
 				if(locked)
@@ -61,6 +67,8 @@ namespace Lockables {
 				locked = true;
 				foreach(var each in lockables)
 					each.Lock();
+
+				lockUpdatedSubject.OnNext (locked);
 			}
 
 			public void Unlock () {
@@ -70,6 +78,8 @@ namespace Lockables {
 				locked = false;
 				foreach(var each in lockables)
 					each.Unlock();
+
+				lockUpdatedSubject.OnNext (locked);
 			}
 
 			public void ForceUnlock () {
@@ -80,6 +90,10 @@ namespace Lockables {
 
 			public bool IsLocked () {
 				return locked;
+			}
+
+			public IObservable<bool> OnLockUpdatedAsObservable () {
+				return lockUpdatedSubject;
 			}
 		}
 	}
