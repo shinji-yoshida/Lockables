@@ -20,6 +20,14 @@ namespace Lockables {
 			return result;
 		}
 
+		public static EmptyLockable Empty() {
+			return new EmptyLockable();
+		}
+
+		public static CountingLockable CountingEmpty() {
+			return new CountingLockable(new EmptyLockable());
+		}
+
 		public static IDisposable WithLock(this ILockable lockable, Action<IDisposable> action) {
 			var singleLock = new Lock(lockable);
 			action(singleLock);
