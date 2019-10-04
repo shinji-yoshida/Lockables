@@ -37,5 +37,14 @@ namespace Lockables
 			if(lockingKeyword.Count == 0)
 				lockable.Unlock();
 		}
+
+		public void UnlockAll()
+		{
+			if(lockingKeyword.Count == 0)
+				return;
+			
+			lockingKeyword.Clear();
+			lockable.Unlock();
+		}
 	}
 }
